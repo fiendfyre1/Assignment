@@ -1,0 +1,27 @@
+#include<stdio.h>
+
+int main() {
+
+    int hour, min, sec;
+    int thour, tmin, tsec;
+    int ehour, emin, esec;
+
+    printf("Enter current time: ");
+    scanf("%d %d %d", &hour, &min, &sec);
+
+    printf("Enter the time required for the task: ");
+    scanf("%d %d %d", &thour, &tmin, &tsec);
+
+    esec = sec + tsec;
+    emin = min + tmin + esec / 60;
+    ehour = hour + thour + emin / 60;
+
+    esec %= 60;
+    emin %= 60;
+    ehour %= 24;
+
+    printf("The task will end at %02d:%02d:%02d\n", ehour, emin, esec);
+
+    return 0;
+}
+
