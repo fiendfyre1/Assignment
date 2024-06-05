@@ -1,0 +1,31 @@
+#include<stdio.h>
+
+int main() {
+
+    int num1;
+    int num2;
+    int num3;
+    char bit1, bit2, bit3, bit4, bit5;
+
+    printf("Enter an integer(0 to 31):");
+    scanf("%d", &num1);
+
+    printf("Its binary representation in 5bits: %d%d%d%d%d\n", (num1 >> 4) & 1, (num1 >> 3) & 1, (num1 >> 2) & 1, (num1 >> 1) & 1, num1 & 1);
+
+    printf("\nEnter an integer (-16 to 15):");
+    scanf("%d", &num2);
+
+    printf("Its binary representation in 5bits: %d%d%d%d%d\n", (num2 >> 4) & 1, (num2 >> 3) & 1, (num2 >> 2) & 1, (num2 >> 1) & 1, num2 & 1);
+
+    printf("\nEnter a 5-bit binary number in two's complement form:");
+    scanf(" %c%c%c%c%c", &bit1, &bit2, &bit3, &bit4, &bit5);
+
+    num3 = ((bit1 - '0') << 4) | ((bit2 - '0') << 3) | ((bit3 - '0') << 2) | ((bit4 - '0') << 1) | (bit5 - '0');
+    if (bit1 == '1') {
+        num3 = num3 - 32;
+    }
+
+    printf("Converted integer: %d\n", num3);
+    return 0;
+}
+
