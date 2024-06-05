@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+void generateMatrix(int *mat, int n) {
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            *(mat + i * n + j) = rand() % 11 - 5;
+        }
+    }
+}
+
+void printMatrix(int *mat, int n) {
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            printf("%-5d", *(mat + i * n + j));
+        }
+        printf("\n");
+    }
+}
+
+void multiplyMatrix(int *mat1, int *mat2, int *result, int n) {
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            *(result + i * n + j) = 0;
+            for(int k = 0; k < n; k++) {
+                *(result + i * n + j) += *(mat1 + i * n + k) * *(mat2 + k * n + j);
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    int mat[11][11] = {};
+    srand(time(NULL));
+    printf("행렬의 크기를 입력하세요: ");
+    scanf("%d", &n);
+    printf("\n\n");
+    
+    int mat1[11][11] = {};
+    int mat2[11][11] = {};
+    int result[11][11] = {};
+
+    generateMatrix((int*)mat1, n);
+    generateMatrix((int*)mat2, n);
+
+    printf("Matrix 1\n");
+    printMatrix((int*)mat1, n);
+    printf("\n");
+
+    printf("Matrix 2\n");
+    printMatrix((int*)mat2, n);
+    printf("\n");
+
+    multiplyMatrix((int*)mat1, (int*)mat2, (int*)result, n);
+
+    printf("Matrix multiplication\n");
+    printMatrix((int*)result, n);
+    printf("\n");
+
+    return 0;
+}
