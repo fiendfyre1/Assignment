@@ -1,0 +1,42 @@
+#include<stdio.h>
+
+int main() {
+    int credit, semester;
+    char thesis, project;
+    int graduate;
+			
+    printf("Enter your total credits: ");
+    scanf("%d", &credit);
+
+    printf("Enter your total semesters: ");
+    scanf("%d", &semester);
+
+    printf("Did you pass the thesis? (P/F): ");
+    scanf(" %c", &thesis);
+
+    printf("Did you pass the project? (P/F): ");
+    scanf(" %c", &project);
+
+    graduate = (credit >= 144) && (semester >= 7 && semester <= 12) && (thesis == 'P' || project == 'P');
+
+    printf("You %s\n", graduate ? "can graduate!" : "cannot graduate...");
+
+    if (!graduate) {
+        if (semester > 12) {
+            printf("Number of semesters exceeded the limit.\n");
+        } 
+	else {
+            if (credit < 144) {
+                printf("You need %d more credits.\n", 144 - credit);
+            }
+            if (semester < 7) {
+                printf("You need %d more semesters.\n", 7 - semester);
+            }
+            if (thesis != 'P' || project != 'P') {
+                printf("You need to pass thesis or project.\n");
+            }
+        }
+    }
+
+    return 0;
+}
