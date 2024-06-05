@@ -1,0 +1,319 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<time.h>
+#include<unistd.h>
+
+struct UI {
+    char ID[16];
+    char PW[21];
+    char RRN[14];
+    int Max_Score;
+};
+
+void ID_Create(struct UI* s, struct UI users[], int user_count) {
+    while(1) {
+        printf("Enter your ID: ");
+        scanf(" %s", s->ID);
+        if(strcmp(s->ID, "quit") == 0) {
+            printf("Quit\n\n");
+            return;
+        }
+        int len = strlen(s->ID);
+
+        int c[5] = {0};
+        int isal = 0;
+        int isnum = 0;
+        int is_ID = 1;
+
+        c[0] = (len >= 8 && len <= 15);
+        c[1] = 1;
+        for(int i = 0; i < len; i++) {
+            char temp = s->ID[i];
+            if (!((temp >= '0' && temp <= '9') || (temp >= 'A' && temp <= 'Z') || 
+                (temp >= 'a' && temp <= 'z'))) {
+                c[1] = 0;
+                break;
+            }
+        }
+
+        for(int i = 0; i < len; i++) {
+            char temp = s->ID[i];
+            if (temp >= '0' && temp <= '9') {
+                isnum = 1;
+            } else if (temp >= 'a' && temp <= 'z') {
+                isal = 1;
+            }
+            if (isal == 1 && isnum == 1) {
+                c[2] = 1;
+                break;
+            }
+        }
+
+        for(int i = 0; i < len-2; i++) {
+            if(s->ID[i] == 'D' && s->ID[i+1] == 'G' && s->ID[i+2] == 'U') {
+                c[3] = 1;
+                break;
+            }
+        }
+
+        c[4] = 1;
+        for(int i = 0; i < user_count; i++) {
+            if(strcmp(s->ID, users[i].ID) == 0) {
+                c[4] = 0;
+                break;
+            }
+        }
+
+        for(int i = 0; i < 5; i++) {
+            if(c[i] == 0) {
+                is_ID = 0;
+                printf("Condition %d: Invalid ID\n", i+1);
+                break;
+            }
+        }
+
+        if(is_ID == 1) {
+            break;
+        }
+    }
+}
+
+void PW_Create(struct UI* s) {
+    while(1) {
+        int c[3] = {};
+        int isPW = 1;
+        int isc1 = 0;
+        int len;
+        int IDlen = strlen(s->ID);
+        printf("Enter your PW: ");
+        scanf(" %s", s->PW);
+        if(strcmp(s->PW, "quit") == 0) {
+            printf("Quit\n\n");
+            return;
+        }
+        len = strlen(s->PW);
+
+        c[0] = (len >= 10 && len <= 20);
+
+        c[1] = 1;
+        for(int i = 0; i < len; i++) {
+            char temp = s->PW[i];
+            if(!((temp >= '0' && temp <= '9') || (temp >= 'A' && temp <= 'Z') || 
+                (temp >= 'a' && temp <= 'z') || (temp == '!'))) {
+                c[1] = 0;
+                break;
+            }
+            if(temp == '!') {
+                isc1 = 1;
+            }
+        }
+        if(isc1 == 0) {
+            c[1] = 0;
+        }
+
+        c[2] = 1;
+        for(int i = 0; i < len-2; i++) {
+            for(int j = 0; j < IDlen-2; j++) {
+                if(s->PW[i] == s->ID[j] && s->PW[i+1] == s->ID[j+1] && s->PW[i+2] == s->ID[j+2]) {
+                    c[2] = 0;
+                }
+            }
+        }
+
+        for(int i = 0; i < 3; i++) {
+            if(c[i] == 0) {
+                printf("Condition %d: Invalid PW\n", i+1);
+                isPW = 0;
+                break;
+            }
+        }
+
+        if(isPW == 1) break;
+    }
+}
+
+void PW_Check(struct UI* s) {
+    char PWcheck[21];
+    while(1) {
+        printf("Enter your PW to check: ");
+        scanf(" %s", PWcheck);
+        if(strcmp(s->PW, "quit") == 0) {
+            printf("Quit\n\n");
+            return;
+        }
+        if(strcmp(PWcheck, s->PW) == 0) {
+            printf("Correct!\n");
+            break;
+        } else {
+            printf("Check your password\n");
+        }
+    }
+}
+
+void RRN_Input(struct UI* s) {
+    while(1) {
+        int is_RRN = 1;
+        int len;
+        printf("Enter your RRN: ");
+        scanf(" %s", s->RRN);
+        if(strcmp(s->RRN, "quit") == 0) {
+            printf("Quit\n\n");
+            return;
+        }
+        len = strlen(s->RRN);
+        if(len != 14 || s->RRN[6] != '-') {
+            is_RRN = 0;
+        } else {
+            for(int i = 0; i < len; i++) {
+                if(i == 6) continue;
+                if(s->RRN[i] < '0' || s->RRN[i] > '9') {
+                    is_RRN = 0;
+                    break;
+                }
+            }
+        }
+
+        if(is_RRN) {
+            break;
+        } else {
+            printf("Invalid RRN\n");
+        }
+    }
+}
+
+void ALL_Print(struct UI* s, int* user_count) {
+    printf("ID: %s\n", s->ID);
+    printf("PW: %s\n", s->PW);
+    printf("RRN: %.8s******\n\n", s->RRN);
+    (*user_count)++;
+}
+
+void Game(struct UI *users, int userIndex, int user_count) {
+    printf("Welcome!\n\n");
+    int game;
+    char random[] = {'w', 'a', 's', 'd'};
+    char cominput[12] = {};
+    char userinput[12] = {};
+    srand(time(NULL));
+
+    do {
+        printf("[Game Menu]\n");
+        printf("1.Game Start\n");
+        printf("2.Logout\n\n");
+        printf("Choose one: ");
+        scanf("%d", &game);
+        if(game == 1) {
+            int currentscore = 0;
+            for(int round = 10; round > 0; round--) {
+                for(int j = 0; j < 10; j++) {
+                    cominput[j] = random[rand() % 4];
+                }
+                cominput[10] = '\0';
+                printf("Memory: %s\n", cominput);
+                sleep(round);
+                system("clear");
+
+                printf("Input: ");
+                scanf(" %11s", userinput);
+                if(strcmp(cominput, userinput) == 0) {
+                    currentscore++;
+                    printf("Correct! Next Round!\n");
+                } else {
+                    break;
+                }
+            }
+            printf("Game Over!\n");
+            printf("Your score: %d\n", currentscore);
+            if(currentscore > users[userIndex].Max_Score) {
+                users[userIndex].Max_Score = currentscore;
+                printf("Best score!\n");
+            }
+            int scores[5] = {};
+            for(int j = 0; j < user_count; j++) {
+                scores[j] = users[j].Max_Score;
+            }
+            for(int i = 0; i < user_count - 1; i++) {
+                for(int j = i + 1; j < user_count; j++) {
+                    if(scores[i] < scores[j]) {
+                        int temp = scores[i];
+                        scores[i] = scores[j];
+                        scores[j] = temp;
+                    }
+                }
+            }
+            for(int k = 0; k < user_count; k++) {
+                if(users[userIndex].Max_Score == scores[k]) {
+                    printf("Rank: %d/%d\n\n", k + 1, user_count);
+                    break;
+                }
+            }
+        }
+    } while(game != 2);
+}
+
+int main() {
+    int log;
+    int user_count = 0;
+    struct UI users[5];
+
+    do {
+        printf("[Login Menu]\n");
+        printf("1.Sign Up\n");
+        printf("2.Login\n");
+        printf("3.Current Users\n");
+        printf("4.Quit\n\n");
+        printf("Choose one: ");
+        scanf("%d", &log);
+
+        if(log == 1) {
+            struct UI* s = &users[user_count];
+            ID_Create(s, users, user_count);
+            if(strcmp(s->ID, "quit") == 0) continue;
+            PW_Create(s);
+            if(strcmp(s->PW, "quit") == 0) continue;
+            PW_Check(s);
+            RRN_Input(s);
+            if(strcmp(s->RRN, "quit") == 0) continue;
+            ALL_Print(s, &user_count);
+            users[user_count-1].Max_Score = -1;
+        } else if(log == 2) {
+            char logID[16] = {};
+            char logPW[21] = {};
+            int idcorrect = 0;
+
+            while(idcorrect == 0) {
+                printf("Enter your ID: ");
+                scanf(" %s", logID);
+                int userIndex = -1;
+                for(int i = 0; i < user_count; i++) {
+                    if(strcmp(logID, users[i].ID) == 0) {
+                        userIndex = i;
+                        idcorrect = 1;
+                        break;
+                    }
+                }
+                if(userIndex == -1) {
+                    printf("This ID does not exist\n");
+                    continue;
+                }
+                printf("Enter your PW: ");
+                scanf(" %s", logPW);
+                if(strcmp(logPW, users[userIndex].PW) == 0) {
+                    Game(users, userIndex, user_count);
+                } else {
+                    printf("The password input is incorrect. Try again.\n");
+                    idcorrect = 0;
+                }
+            }
+        } else if(log == 3) {
+            printf("Current User Numbers: %d\n", user_count);
+            for(int i = 0; i < user_count; i++) {
+                printf("%d_Users ID : %s\n", i + 1, users[i].ID);
+            }
+            printf("\n");
+        }
+    } while(log != 4);
+
+    return 0;
+}
