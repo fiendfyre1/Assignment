@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <math.h>
+
+double eval(double p[], double x, int n) {
+    double result = 0;
+    for (int i = 0; i <= n; i++) {
+        result += p[i] * pow(x, i);
+    }
+    return result;
+}
+
+void add(double f[], double g[], double h[], int n) {
+    for (int i = 0; i <= n; i++) {
+        f[i] = g[i] + h[i];
+    }
+}
+
+int main() {
+    int n;
+    double x;
+    double p[101];
+    double g[101], h[101], f[101];
+    double result;
+
+    printf("계수의 개수 n: ");
+    scanf("%d", &n);
+
+    printf("x값: ");
+    scanf("%lf", &x);
+
+    printf("a0 ~ a%d 입력: ", n);
+    for (int i = 0; i <= n; i++) {
+        scanf("%lf", &p[i]);
+    }
+
+    result = eval(p, x, n);
+    printf("p(%g) = %g\n", x, result);
+    printf("----------------------\n");
+
+    printf("계수의 개수 n: ");
+    scanf("%d", &n);
+
+    printf("g(x) a0 ~ a%d 입력: ", n);
+    for (int i = 0; i <= n; i++) {
+        scanf("%lf", &g[i]);
+    }
+
+    printf("h(x) b0 ~ b%d 입력: ", n);
+    for (int i = 0; i <= n; i++) {
+        scanf("%lf", &h[i]);
+    }
+
+    add(f, g, h, n);
+
+    printf("g(x) = %g", g[0]);
+    for (int i = 1; i <= n; i++) {
+        printf(" + %gx^%d", g[i], i);
+    }
+    printf("\n");
+
+    printf("h(x) = %g", h[0]);
+    for (int i = 1; i <= n; i++) {
+        printf(" + %gx^%d", h[i], i);
+    }
+    printf("\n");
+
+    printf("f(x) = %g", f[0]);
+    for (int i = 1; i <= n; i++) {
+        printf(" + %gx^%d", f[i], i);
+    }
+    printf("\n");
+
+    return 0;
+}
