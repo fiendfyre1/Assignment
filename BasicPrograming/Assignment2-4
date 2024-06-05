@@ -1,0 +1,60 @@
+#include<stdio.h>
+
+
+int main() {
+
+    int event_month, event_day;
+    int today_month, today_day;
+    int days_until_event = 0, days_until_today = 0;
+
+    printf("Enter the event date (month day): ");
+    scanf("%d %d", &event_month, &event_day);
+
+    printf("Enter today's date (month day): ");
+    scanf("%d %d", &today_month, &today_day);
+
+    switch (today_month-1) {
+    case 11: days_until_today += 30;
+    case 10: days_until_today += 31;
+    case 9: days_until_today += 30;
+    case 8: days_until_today += 31;
+    case 7: days_until_today += 31;
+    case 6: days_until_today += 30;
+    case 5: days_until_today += 31;
+    case 4: days_until_today += 30;
+    case 3: days_until_today += 31;
+    case 2: days_until_today += 29;
+    case 1: days_until_today += 31;
+    case 0: break;
+    }
+    days_until_today += today_day;
+
+    switch (event_month-1) {
+    case 11: days_until_event += 30;
+    case 10: days_until_event += 31;
+    case 9: days_until_event += 30;
+    case 8: days_until_event += 31;
+    case 7: days_until_event += 31;
+    case 6: days_until_event += 30;
+    case 5: days_until_event += 31;
+    case 4: days_until_event += 30;
+    case 3: days_until_event += 31;
+    case 2: days_until_event += 29;
+    case 1: days_until_event += 31;
+    case 0: break;
+    }
+    days_until_event += event_day;
+
+    if (days_until_event > days_until_today) {
+        printf("D-%d\n", days_until_event - days_until_today);
+    }
+    else if (days_until_event == days_until_today) {
+        printf("D-day!\n");
+    }
+    else {
+        printf("D+%d\n", days_until_today - days_until_event);
+    }
+
+    return 0;
+}
+
