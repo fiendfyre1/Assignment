@@ -1,0 +1,24 @@
+#include<stdio.h>
+
+int main() {
+	char model;
+	short member;
+	float fuel;
+	int drive;
+	long won;
+	
+	printf("모델: ");
+	scanf("%c", &model);
+	printf("승차 인원: ");
+	scanf("%hd", &member);
+	printf("연비(km/l): ");
+	scanf("%f", &fuel);
+	printf("주행거리(km): ");
+	scanf("%d", &drive);
+	printf("가격(원): ");
+	scanf("%ld", &won);
+	printf("\n자동차의 모델은 %c입니다.\n",model);
+	printf("승차인원 %hd명, 연비 %.1fkm/l, 주행거리 %dkm입니다.\n", member, fuel, drive);
+	printf("가격은 %ld만원입니다.\n", won/10000);
+	return 0;
+}
