@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+typedef struct {
+    char name[50];
+    char email[50];
+    char phone[25];  
+} UserData;
+
+
+int main() {
+    UserData *user;
+    int n;
+
+    printf("Enter user number: ");
+    scanf("%d", &n);
+
+    user = (UserData*)malloc(sizeof(UserData)*n);
+
+    if(user == NULL) {
+        printf("Memory allocation error\n");
+        return 1;
+    }
+
+    for(int i = 0; i < n; i++) {
+        printf("\nEnter name: ");
+        scanf(" %s", user[i].name);
+
+        printf("Enter email: ");
+        scanf(" %s", user[i].email);
+        
+        printf("Enter phone number: ");
+        scanf(" %[^\n]", user[i].phone);
+    }
+
+    for (int i = 0; i < n; i++) {
+        printf("\nUser %d\nName: %s, Email: %s, Phone number: %s\n\n", i + 1, user[i].name, user[i].email, user[i].phone);
+    }
+
+    char c;
+    do {
+        printf("Do you want to enter additional user data? (y/n)");
+        scanf(" %c", &c);
+
+        if(c == 'y') {
+            int add;
+            printf("\nEnter the number of additional user: ");
+            scanf("%d", &add);
+
+            int totalnum = add + n;
+
+            UserData *temp = (UserData *)realloc(user, totalnum * sizeof(UserData));
+            if(temp == NULL) {
+                printf("Memory allocation error\n");
+                free(user);
+                return 1;
+            }
+            user = temp;
+
+            for(int i = n; i < totalnum; i++) {
+                printf("\nEnter name: ");
+                scanf(" %s", user[i].name);
+
+                printf("Enter email: ");
+                scanf(" %s", user[i].email);
+
+                printf("Enter phone number: ");
+                scanf(" %[^\n]", user[i].phone);
+            }
+
+            n = totalnum;
+
+            for (int i = 0; i < n; i++) {
+                printf("\nUser %d\nName: %s, Email: %s, Phone number: %s\n\n", i + 1, user[i].name, user[i].email, user[i].phone);
+            }
+        }
+    } while(c == 'y');
+
+
+    free(user);
+
+    return 0;
+}
