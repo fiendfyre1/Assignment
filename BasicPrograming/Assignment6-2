@@ -5,8 +5,9 @@
 typedef struct {
     char name[50];
     char email[50];
-    char phone[25];  
+    char phone[25];
 } UserData;
+
 
 int main() {
     char Name[50];
@@ -16,9 +17,8 @@ int main() {
     int isfound = 0;
 
     fp = fopen("user_data.txt", "r");
-    
-    if(fp == NULL) {
-        printf("\nFile open failed\n\n");
+    if (fp == NULL) {
+        printf("\n파일 열기 실패\n\n");
         return 1;
     }
 
@@ -32,71 +32,94 @@ int main() {
     }
     rewind(fp);
 
-    UserData user[lines];
+    UserData *users = (UserData *)malloc(sizeof(UserData) * lines);
+    UserData *original = (UserData *)malloc(sizeof(UserData) * lines);
 
-    printf("Enter name to update: ");
-    scanf(" %s", Name);
+    if (users == NULL || original == NULL) {
+        printf("Memory allocation failed\n");
+        fclose(fp);
+        return 1;
+    }
 
     int i = 0;
-    while(fgets(line, sizeof(line), fp) != NULL) {
+    while (fgets(line, sizeof(line), fp) != NULL) {
         char *token;
 
         token = strtok(line, ":");
         token = strtok(NULL, ",");
-        token +=1;
-        strcpy(user[i].name, token);
+        token += 1;
+        strcpy(users[i].name, token);
+        strcpy(original[i].name, token);
 
         token = strtok(NULL, ":");
         token = strtok(NULL, ",");
         token += 1;
-        strcpy(user[i].email, token);
+        strcpy(users[i].email, token);
+        strcpy(original[i].email, token);
 
         token = strtok(NULL, ":");
         token = strtok(NULL, "\n");
         token += 1;
-        strcpy(user[i].phone, token);
-        
-        if(strcmp(user[i].name, Name) == 0) {
-            printf("Enter new phone number: ");
-            scanf(" %[^\n]", newPhone);
+        strcpy(users[i].phone, token);
+        strcpy(original[i].phone, token);
 
-            strcpy(user[i].phone, newPhone);
-            isfound = 1;
-        }
         i++;
     }
     fclose(fp);
 
-    if(isfound == 0) {
+    printf("Enter name to update: ");
+    scanf(" %s", Name);
+
+    for (i = 0; i < lines; i++) {
+        if (strcmp(users[i].name, Name) == 0) {
+            printf("Enter new phone number: ");
+            scanf(" %[^\n]", newPhone);
+            strcpy(users[i].phone, newPhone);
+            isfound = 1;
+            break;
+        }
+    }
+
+    if (isfound == 0) {
         printf("Invalid username\n");
     }
     else {
-        fp = fopen("user_data.txt", "w");
         int ischange = 0;
-
-        for(i = 0; i < lines; i++) {
-            fgets(line, sizeof(line), fp);
-            if(strstr(line, user[i].name) == NULL || strstr(line, user[i].email) == NULL || strstr(line, user[i].phone) == NULL) {
-                ischange = 1;
-                break;
+        for (i = 0; i < lines; i++) {
+            if (strcmp(users[i].name, original[i].name) != 0 ||
+                strcmp(users[i].email, original[i].email) != 0 ||
+                strcmp(users[i].phone, original[i].phone) != 0) {
+                if (strcmp(users[i].phone, newPhone) == 0) {
+                    continue;
+                }
+                else {
+                    ischange = 1;
+                    break;
+                }
             }
         }
-
 
         if (ischange == 0) {
-            for(int i = 0; i < lines; i++) {
-            fprintf(fp, "Name: %s, Email: %s, Phone number: %s\n", user[i].name, user[i].email, user[i].phone);
+            fp = fopen("user_data.txt", "w");
+            if (fp == NULL) {
+                printf("File open failed\n");
+                free(users);
+                free(original);
+                return 1;
             }
 
+            for (i = 0; i < lines; i++) {
+                fprintf(fp, "Name: %s, Email: %s, Phone number: %s\n", users[i].name, users[i].email, users[i].phone);
+            }
+            fclose(fp);
             printf("Update complete\n");
-        } else {
+        }
+        else {
             printf("Other user data changed. Update cancelled\n");
         }
-        
-        
     }
 
-    fclose(fp);
-
+    free(users);
+    free(original);
     return 0;
 }
