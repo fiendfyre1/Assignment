@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct {
+    char name[50];
+    char email[50];
+    char phone[25];  
+} UserData;
+
+int main() {
+    int n;
+    char str[100];
+    FILE *fp;
+    UserData user;
+    fp = fopen("user_data.txt", "w");
+    
+    if(fp == NULL) {
+        printf("\nFile open failed\n\n");
+        return 1;
+    }
+
+    printf("User number: ");
+    scanf("%d", &n);
+    
+    for(int i = 0; i < n; i++) {
+        printf("\nEnter name: ");
+        scanf(" %s", user.name);
+
+        printf("Enter email: ");
+        scanf(" %s", user.email);
+
+        printf("Enter phone number: ");
+        scanf(" %[^\n]", user.phone);
+
+        fprintf(fp, "Name: %s, Email: %s, Phone number: %s\n", user.name, user.email, user.phone);
+    }
+
+    fclose(fp);
+
+    return 0;
+}
